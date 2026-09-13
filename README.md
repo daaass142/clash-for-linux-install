@@ -21,19 +21,22 @@
 - **广泛兼容**：支持 `root` / 普通用户，适配主流 `Linux` 发行版、容器环境及 `systemd` / `OpenRC` 等 `init` 系统。
 - **统一管理**：通过 `clashctl` 管理代理启停、状态查看、日志追踪、Web 面板、TUN 模式、访问密钥与内核升级等。
 - **订阅管理**：支持多订阅源配置、一键新增、切换、更新等，并集成 [subconverter](https://github.com/tindy2013/subconverter) 实现订阅格式转换。
+- **安全默认**：Web 控制器默认仅监听本机；依赖与订阅默认要求 TLS；安装、服务与卸载路径包含额外安全校验。
 
 ## 🚀 Installation
 
-在终端中执行以下命令即可完成安装：
+建议直接从 GitHub 克隆本仓库，避免把安装链路交给第三方下载代理：
 
 ```bash
-git clone --branch master --depth 1 https://gh-proxy.org/https://github.com/nelvko/clash-for-linux-install.git \
+git clone --branch master --depth 1 https://github.com/daaass142/clash-for-linux-install.git \
   && cd clash-for-linux-install \
   && bash install.sh
 ```
 
-- 上述命令使用了[加速前缀](https://gh-proxy.org/)，如失效请更换其他[可用链接](https://ghproxy.link/)。
 - 可通过 `.env.install` 文件自定义安装选项。
+- `GH_PROXY` 默认留空。若网络环境确实需要 GitHub 下载代理，请只配置自己信任的 `https://` 服务；代理能够看到并替换下载内容。
+- 依赖默认使用仓库中指定版本，避免安装时静默漂移到未经验证的新版本。
+- HTTP 订阅默认拒绝；只有明确接受中间人篡改风险时才应显式开启兼容选项。
 - 没有订阅？[click me](https://次元.net/auth/register?code=oUbI)
 
 ## 🎯 Quick Start
@@ -60,6 +63,8 @@ clashctl -h              # 查看全部命令
 ```bash
 bash uninstall.sh
 ```
+
+卸载脚本会校验安装目录身份并拒绝删除系统关键路径，以降低错误配置导致递归误删的风险。
 
 ## 📖 Documentation
 
