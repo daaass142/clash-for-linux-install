@@ -53,12 +53,16 @@ _validate_uninstall_target() {
 }
 
 _revoke_rc_safe() {
-    detect_rc
+    local shell_rc_bash='' shell_rc_zsh='' shell_rc_fish=''
+    command -v bash >/dev/null 2>&1 && shell_rc_bash="${HOME}/.bashrc"
+    command -v zsh >/dev/null 2>&1 && shell_rc_zsh="${HOME}/.zshrc"
+    command -v fish >/dev/null 2>&1 && shell_rc_fish="${HOME}/.config/fish/conf.d/clashctl.fish"
+
     local rc tmp
     local export_line="export CLASHCTL_HOME=$CLASHCTL_HOME"
     local source_line='. $CLASHCTL_HOME/scripts/cmd/clashctl.sh'
 
-    for rc in "$SHELL_RC_BASH" "$SHELL_RC_ZSH"; do
+    for rc in "$shell_rc_bash" "$shell_rc_zsh"; do
         [ -f "$rc" ] || continue
         tmp=$(mktemp "${rc}.clashctl.XXXXXX") || {
             _failcat "无法安全更新 shell 配置：$rc" || true
@@ -75,11 +79,11 @@ _revoke_rc_safe() {
         /usr/bin/rm -f -- "$tmp"
     done
 
-    if [ -n "$SHELL_RC_FISH" ] && [ -f "$SHELL_RC_FISH" ]; then
-        if grep -qF '# clashctl shell-rc (managed by install.sh, do not edit)' "$SHELL_RC_FISH"; then
-            /usr/bin/rm -f -- "$SHELL_RC_FISH"
+    if [ -n "$shell_rc_fish" ] && [ -f "$shell_rc_fish" ]; then
+        if grep -qF '# clashctl shell-rc (managed by install.sh, do not edit)' "$shell_rc_fish"; then
+            /usr/bin/rm -f -- "$shell_rc_fish"
         else
-            _failcat '⚠️ ' "未删除非托管 fish 配置：$SHELL_RC_FISH" || true
+            _failcat '⚠️ ' "未删除非托管 fish 配置：$shell_rc_fish" || true
         fi
     fi
 }
