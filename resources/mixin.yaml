@@ -1,12 +1,13 @@
 mixed-port: 7890
 
-external-controller: "0.0.0.0:9090"
+# 安全默认：控制接口只监听本机，避免被局域网/公网扫描与接管。
+# 如确需远程管理，请显式修改并配合强 secret、主机防火墙或 SSH 隧道。
+external-controller: "127.0.0.1:9090"
 external-ui: dist
-external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
 secret:
 
-allow-lan: false # 若开启务必设置身份验证以防暴露公网后被滥用
-authentication:
+allow-lan: false # 若开启务必设置身份验证，并限制防火墙来源地址
+ authentication:
   # - "username:password"
 
 # prepend  前置插入：插入到原列表开头，适用于 rules、proxies、proxy-groups
