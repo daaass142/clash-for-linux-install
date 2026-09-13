@@ -7,7 +7,7 @@ external-ui: dist
 secret:
 
 allow-lan: false # 若开启务必设置身份验证，并限制防火墙来源地址
- authentication:
+authentication:
   # - "username:password"
 
 # prepend  前置插入：插入到原列表开头，适用于 rules、proxies、proxy-groups
@@ -18,7 +18,6 @@ allow-lan: false # 若开启务必设置身份验证，并限制防火墙来源�
 # 示例：https://github.com/nelvko/clash-for-linux-install/discussions/562
 rules:
   prepend:
-    - DOMAIN,api64.ipify.org,DIRECT # 用于 clashui 获取真实公网 IP
     # - DOMAIN-KEYWORD,github,proxy   # 用于 clashupgrade 升级内核
   append:
 
