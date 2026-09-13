@@ -6,8 +6,16 @@ After=network.target NetworkManager.service systemd-networkd.service iwd.service
 Type=simple
 LimitNPROC=500
 LimitNOFILE=1000000
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE
+# Least privilege: TUN/routing needs NET_ADMIN/NET_RAW; do not grant ptrace,
+# DAC override, system-time or other host-wide capabilities by default.
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectKernelLogs=true
+RestrictSUIDSGID=true
+LockPersonality=true
 Restart=always
 ExecStartPre=/usr/bin/sleep 1s
 ExecStart=placeholder_cmd_full
