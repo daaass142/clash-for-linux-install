@@ -147,6 +147,16 @@ download_zip() {
     local url_clash url_mihomo url_yq url_subconverter
     local arch=$(uname -m)
 
+    if [ -n "${GH_PROXY:-}" ]; then
+        case "$GH_PROXY" in
+        https://*) ;;
+        *)
+            _errorcat "GH_PROXY 仅允许 HTTPS 地址，拒绝不安全的依赖下载代理：$GH_PROXY"
+            exit 1
+            ;;
+        esac
+    fi
+
     CLASHCTL_LATEST_VERSION_FALLBACK_WARNED=0
     case "${CLASHCTL_CHECK_LATEST_VERSION:-1}" in
     1) _okcat '🔎' "查询依赖最新版本..." ;;
@@ -215,8 +225,9 @@ download_zip() {
             --progress-bar \
             --show-error \
             --fail \
-            --insecure \
             --location \
+            --proto '=https' \
+            --proto-redir '=https' \
             --max-time "$CLASHCTL_DOWNLOAD_TIMEOUT" \
             --retry 1 \
             --output "$target" \
