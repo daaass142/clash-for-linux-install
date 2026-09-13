@@ -33,6 +33,8 @@ clashupgrade() {
         follow_pid=$!
     }
 
+    # Internal CLI traffic must stay on loopback even when the controller is
+    # explicitly exposed to LAN. This keeps the Bearer secret off the network.
     local res
     res=$(
         curl -X POST \
@@ -40,7 +42,7 @@ clashupgrade() {
             --noproxy "*" \
             --location \
             -H "Authorization: Bearer $(_get_secret)" \
-            "http://${EXT_IP}:${EXT_PORT}/upgrade?channel=$channel"
+            "http://127.0.0.1:${EXT_PORT}/upgrade?channel=$channel"
     )
 
     [ -n "$follow_pid" ] && kill "$follow_pid" >/dev/null 2>&1
